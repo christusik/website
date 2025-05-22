@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects - Christina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Swiper.js -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: 10;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+    }
+    nav a {
+      color: #00ffe1;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 6px #ff00ff;
+    }
+    .swiper {
+      width: 100%;
+      height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+    .swiper-slide {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ffe1;
+      box-shadow: 0 0 12px #00ffe1;
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.5s;
+    }
+    .project-title {
+      margin-top: 1rem;
+      font-size: 2rem;
+      text-shadow: 0 0 6px #00ffe1;
+    }
+    .neon-button {
+      display: inline-block;
+      border: 2px solid #0ff;
+      padding: 0.5rem 1.5rem;
+      color: #0ff;
+      background: transparent;
+      text-transform: uppercase;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    .neon-button:hover {
+      background: #0ff;
+      color: #000;
+      box-shadow: 0 0 8px #0ff, 0 0 16px #0ff, 0 0 24px #0ff;
+    }
+    .project-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .project-gallery img {
+      width: 250px;
+      height: 180px;
+      object-fit: contain;
+      border: 2px solid #00ffe1;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 6px #00ffe1;
+      transition: transform 0.3s ease;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .project-gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #ff00ff;
+      border-color: #ff00ff;
+    }
+    /* Модальные окна */
+    .modal, .details-modal {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .details-content {
+      background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2));
+      border: 2px solid #00ffe1;
+      box-shadow: 0 0 20px #00ffe1, 0 0 30px #ff00ff;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: left;
+      max-width: 600px;
+      width: 90%;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .details-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+    .details-content p, .details-content ul {
+      margin-bottom: 1rem;
+    }
+    .close-button {
+      margin-top: 1rem;
+      background: #00ffe1;
+      color: black;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .close-button:hover {
+      background: #ff00ff;
+      color: white;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+  </ul>
+</nav>
+
+<!-- Swiper -->
+<div class="swiper">
+  <div class="swiper-wrapper">
+
+    <!-- Project -->
+    <div class="swiper-slide">
+      <div class="project-title">Kitsune.exe</div>
+
+      <div class="project-gallery">
+        <img src="https://file.garden/aAnc8CRCrCCMWit1/ChatGPT%20Image%2026%20апр.%202025%20г.,%2001_12_19.png" alt="Kitsune Image 1" onclick="openModal(this.src)">
+        <img src="https://file.garden/aAnc8CRCrCCMWit1/ChatGPT%20Image%2026%20апр.%202025%20г.,%2018_31_20.png" alt="Kitsune Image 2" onclick="openModal(this.src)">
+        <img src="https://file.garden/aAnc8CRCrCCMWit1/ChatGPT%20Image%2026%20апр.%202025%20г.,%2018_33_30.png" alt="Kitsune Image 3" onclick="openModal(this.src)">
+      </div>
+
+      <div class="button-group">
+        <a href="#" class="neon-button" onclick="redirectToDemo()">Play Demo</a>
+        <a href="#" class="neon-button" onclick="openDetails()">View Details</a>
+        <a href="index.html" class="neon-button">Back</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<!-- Модалки -->
+<div id="modal" class="modal" onclick="closeModal()">
+  <img id="modal-img" src="" alt="Full Image" style="max-width:90%; max-height:90%; border:2px solid #00ffe1; border-radius:12px;">
+</div>
+
+<div id="detailsModal" class="details-modal">
+  <div class="details-content">
+    <h2>Kitsune.exe</h2>
+    <p><strong>Описание:</strong> Погрузись в мир цифровой магии, где ты управляешь кибер-лисой Kitsune в синтвейв мире.</p>
+    <ul>
+      <li>⚡ Неоновый стиль и пиксель-арт атмосфера</li>
+      <li>🌌 Открытый мир, наполненный загадками</li>
+      <li>🦊 Система прокачки персонажа</li>
+      <li>🎶 Синтвейв-саундтрек для полного погружения</li>
+    </ul>
+    <button class="close-button" onclick="closeDetails()">Close</button>
+  </div>
+</div>
+
+<!-- Скрипты -->
+<script>
+  const swiper = new Swiper('.swiper', {
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    loop: true,
+    coverflowEffect: {
+      rotate: 50,
+      stretch: 0,
+      depth: 200,
+      modifier: 1,
+      slideShadows: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    keyboard: {
+      enabled: true,
+    },
+  });
+
+  function openModal(src) {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-img').src = src;
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  function openDetails() {
+    document.getElementById('detailsModal').style.display = 'flex';
+  }
+
+  function closeDetails() {
+    document.getElementById('detailsModal').style.display = 'none';
+  }
+
+  function redirectToDemo() {
+    window.location.href = "labirint.html"; // тут укажи путь к своему лабиринту!
+  }
+ 
+
+</script>
+<!-- МУЗЫКА -->
+<audio id="bg-music" loop>
+  <source src="https://file.garden/aAnc8CRCrCCMWit1/tokyo-glow-285247.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Громкость (необязательно) -->
+<div style="position:fixed; bottom:20px; right:20px; z-index:100;">
+  <input type="range" id="volume" min="0" max="1" step="0.01" value="0.4">
+</div>
+
+<script>
+  // Воспроизведение музыки при первом клике
+  window.addEventListener('click', function playOnce() {
+    const music = document.getElementById('bg-music');
+    music.volume = document.getElementById("volume")?.value || 0.4;
+    music.play().catch(err => {
+      console.warn("Автозапуск заблокирован", err);
+    });
+    window.removeEventListener('click', playOnce);
+  });
+
+  // Регулятор громкости
+  document.getElementById("volume").addEventListener("input", (e) => {
+    const music = document.getElementById("bg-music");
+    music.volume = e.target.value;
+  });
+</script>
+
+</body>
+</html>
+
