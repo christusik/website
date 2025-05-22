@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery Vortex</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: radial-gradient(circle at center, #111111 0%, #000000 100%);
+    }
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+    }
+    #overlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 40px #00ffff;
+    }
+    #overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <img src="" alt="Poster Preview">
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three@0.156.1';
+    import { OrbitControls } from 'https://esm.sh/three@0.156.1/examples/jsm/controls/OrbitControls.js';
+
+    // Сцена и камера
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 10);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Контроллер
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enableZoom = true;
+    controls.zoomSpeed = 0.5;
+    controls.minDistance = 7;
+    controls.maxDistance = 15;
+    controls.enablePan = false;
+    controls.enableRotate = false;
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.minPolarAngle = Math.PI / 2;
+
+  
+
+    // Свет
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
+
+    // Постеры
+    const posterUrls = [
+      "https://raw.githubusercontent.com/christusik/site/962085d2ac9a133418b32fd6c642018ede98fbc0/poster1.jpg",
+      "https://raw.githubusercontent.com/christusik/site/962085d2ac9a133418b32fd6c642018ede98fbc0/poster2.jpg",
+      "https://raw.githubusercontent.com/christusik/site/962085d2ac9a133418b32fd6c642018ede98fbc0/poster3.jpg"
+    ];
+
+    const textureLoader = new THREE.TextureLoader();
+    const group = new THREE.Group();
+    const radius = 5;
+    const heightStep = 2;
+    const angleStep = Math.PI * 2 / posterUrls.length;
+    const posterMeshes = [];
+
+    posterUrls.forEach((url, i) => {
+      const texture = textureLoader.load(url);
+      const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+      const geometry = new THREE.PlaneGeometry(3, 4);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.userData.url = url;
+
+      const angle = i * angleStep;
+      mesh.position.set(
+        Math.cos(angle) * radius,
+        i * heightStep * 0.5 - (posterUrls.length * heightStep * 0.25),
+        Math.sin(angle) * radius
+      );
+      mesh.lookAt(new THREE.Vector3(0, mesh.position.y, 0));
+
+      group.add(mesh);
+      posterMeshes.push(mesh);
+    });
+    scene.add(group);
+
+   
+    // Спарклы
+    const sparkles = new THREE.Group();
+    const sparkleMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+    for (let i = 0; i < 80; i++) {
+      const sparkleGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+      const sparkle = new THREE.Mesh(sparkleGeometry, sparkleMaterial.clone());
+      sparkle.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
+      sparkle.userData.speed = (Math.random() - 0.5) * 0.02;
+      sparkles.add(sparkle);
+    }
+    scene.add(sparkles);
+
+    // Оверлей
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const overlay = document.getElementById('overlay');
+    const overlayImg = overlay.querySelector('img');
+
+    // Вращение группой через клавиши
+    let rotateSpeed = 0.003;
+    const rotateAcceleration = 0.01;
+    const rotateMaxSpeed = 0.15;
+
+    window.addEventListener('keydown', (event) => {
+      if (event.code === 'ArrowLeft') rotateSpeed = Math.max(rotateSpeed - rotateAcceleration, -rotateMaxSpeed);
+      if (event.code === 'ArrowRight') rotateSpeed = Math.min(rotateSpeed + rotateAcceleration, rotateMaxSpeed);
+    });
+
+    // Клик по постеру
+    window.addEventListener('pointerdown', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(posterMeshes);
+
+      if (intersects.length > 0) {
+        const mesh = intersects[0].object;
+        overlayImg.src = mesh.userData.url;
+        overlay.classList.add('active');
+      }
+    });
+
+    overlay.addEventListener('click', () => {
+      overlay.classList.remove('active');
+      overlayImg.src = '';
+    });
+
+    // Анимация
+    function animate() {
+      requestAnimationFrame(animate);
+
+      group.rotation.y += rotateSpeed;
+      rotateSpeed *= 0.97;
+      sparkles.rotation.y += 0.001;
+
+      sparkles.children.forEach(sparkle => {
+        sparkle.material.opacity = 0.5 + Math.sin(Date.now() * sparkle.userData.speed) * 0.5;
+        sparkle.material.transparent = true;
+      });
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+

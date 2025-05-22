@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабиринт Kitsune.exe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      font-family: 'Orbitron', 'Courier New', Courier, monospace;
+      color: #00ffe1;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas {
+      background: #0a0a0a;
+      box-shadow: 0 0 20px #00ffe1, 0 0 40px #00ffe1;
+      display: block;
+    }
+    #novel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      animation: fadeIn 2s;
+    }
+    .dialogue {
+      background: rgba(10,10,10,0.8);
+      border: 2px solid #00ffe1;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px #00ffe1;
+      font-size: 18px;
+      text-align: center;
+    }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .option {
+      background: #00ffe1;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffe1;
+      transition: background 0.3s, transform 0.3s;
+      font-size: 16px;
+    }
+    .option:hover {
+      background: #00cccc;
+      transform: scale(1.05);
+    }
+    #foxImage {
+      max-height: 50%;
+      margin-bottom: 20px;
+      animation: fadeIn 2s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+  </style>
+</head>
+<body>
+<canvas id="maze" width="800" height="840"></canvas>
+
+<div id="novel">
+  <img id="foxImage" src="https://file.garden/aAnc8CRCrCCMWit1/DE8FC31D-B461-4D63-A27E-2F1808D35D6B%202.PNG" alt="Fox">
+  <div class="dialogue" id="dialogueText">...</div>
+  <div class="options" id="options">
+    <button class="option" onclick="chooseOption(1)">...</button>
+    <button class="option" onclick="chooseOption(2)">...</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('maze');
+const ctx = canvas.getContext('2d');
+
+const cellSize = 40;
+const cols = 20;
+const rows = 21;
+
+const map = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],
+  [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1],
+  [1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1],
+  [1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,1],
+  [1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1],
+  [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1],
+  [0,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1,1,0,0],
+  [1,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1],
+  [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1],
+  [1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1],
+  [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1],
+  [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1],
+  [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1],
+  [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+const fox = new Image();
+fox.src = 'https://file.garden/aAnc8CRCrCCMWit1/DE8FC31D-B461-4D63-A27E-2F1808D35D6B%202.PNG';
+
+const player = {
+  x: 1,
+  y: 8,
+  size: cellSize * 1.8,
+  speed: 2
+};
+
+let coins = [];
+let fireworks = [];
+let collectedCoins = 0;
+let finished = false;
+let dialogueStep = 0;
+
+function placeCoins() {
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (map[y][x] === 0) {
+        let walls = 0;
+        if (map[y-1]?.[x] === 1) walls++;
+        if (map[y+1]?.[x] === 1) walls++;
+        if (map[y]?.[x-1] === 1) walls++;
+        if (map[y]?.[x+1] === 1) walls++;
+        if (walls >= 3) {
+          coins.push({x, y, collected: false});
+        }
+      }
+    }
+  }
+}
+
+function drawMaze() {
+  ctx.fillStyle = '#00ffe1';
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (map[y][x] === 1) {
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+}
+
+function drawCoins() {
+  ctx.fillStyle = '#ffcc00';
+  coins.forEach(c => {
+    if (!c.collected) {
+      ctx.beginPath();
+      ctx.arc(c.x * cellSize + cellSize/2, c.y * cellSize + cellSize/2, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+}
+
+function drawPlayer() {
+  ctx.drawImage(
+    fox,
+    player.x * cellSize + (cellSize - player.size) / 2,
+    player.y * cellSize + (cellSize - player.size) / 2,
+    player.size,
+    player.size
+  );
+}
+
+document.addEventListener('keydown', (e) => {
+  if (finished) return;
+  let dx = 0, dy = 0;
+  if (e.key === 'ArrowUp') dy = -1;
+  if (e.key === 'ArrowDown') dy = 1;
+  if (e.key === 'ArrowLeft') dx = -1;
+  if (e.key === 'ArrowRight') dx = 1;
+
+  const newX = player.x + dx;
+  const newY = player.y + dy;
+
+  if (map[newY]?.[newX] === 0) {
+    player.x = newX;
+    player.y = newY;
+  }
+
+  coins.forEach(c => {
+    if (!c.collected && c.x === player.x && c.y === player.y) {
+      c.collected = true;
+      collectedCoins++;
+    }
+  });
+
+  if (newY === 8 && newX === 19) {
+    startFireworks();
+  }
+});
+
+function startFireworks() {
+  finished = true;
+  for (let i = 0; i < 150; i++) {
+    fireworks.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      dx: (Math.random() - 0.5) * 12,
+      dy: (Math.random() - 0.5) * 12,
+      color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+      life: 100
+    });
+  }
+  setTimeout(startNovel, 3000);
+}
+
+function startNovel() {
+  document.getElementById('novel').style.display = 'flex';
+  nextDialogue();
+}
+
+function chooseOption(option) {
+  if (dialogueStep === 0) {
+    dialogueStep = option;
+    nextDialogue();
+  } else {
+    goToProjects();
+  }
+}
+
+function nextDialogue() {
+  if (dialogueStep === 0) {
+    document.getElementById('dialogueText').textContent = `Ты выбрался из лабиринта. Монет собрано: ${collectedCoins}. Что будешь делать?`;
+    document.getElementById('options').innerHTML = `
+      <button class="option" onclick="chooseOption(1)">Следовать за лисой</button>
+      <button class="option" onclick="chooseOption(2)">Остаться здесь</button>
+    `;
+  } else if (dialogueStep === 1) {
+    document.getElementById('dialogueText').textContent = "Лиса смотрит на тебя: 'Путь вперед - неизвестен, но удивителен.'";
+    document.getElementById('options').innerHTML = `
+      <button class="option" onclick="chooseOption(0)">Далее</button>
+    `;
+  } else if (dialogueStep === 2) {
+    document.getElementById('dialogueText').textContent = "Ты остался в лабиринте. Свет гаснет... но ты чувствуешь покой.";
+    document.getElementById('options').innerHTML = `
+      <button class="option" onclick="chooseOption(0)">Далее</button>
+    `;
+  }
+}
+
+function goToProjects() {
+  window.location.href = 'index.html'; // <-- путь на главную
+}
+
+function drawFireworks() {
+  for (let i = 0; i < fireworks.length; i++) {
+    const f = fireworks[i];
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = f.color;
+    ctx.fill();
+    f.x += f.dx;
+    f.y += f.dy;
+    f.life--;
+  }
+  fireworks = fireworks.filter(f => f.life > 0);
+}
+
+function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawMaze();
+  drawCoins();
+  drawPlayer();
+  drawFireworks();
+  requestAnimationFrame(loop);
+}
+
+fox.onload = () => {
+  placeCoins();
+  loop();
+};
+</script>
+
+</body>
+</html>

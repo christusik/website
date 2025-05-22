@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christina Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* БАЗА */
+    body {
+      margin: 0;
+      font-family: 'Zen Kurenaido', 'Noto Sans JP', sans-serif;
+      color: #e0e0e0;
+      background: url('https://file.garden/aAnc8CRCrCCMWit1/IMG_0078%202.PNG') no-repeat center center / cover;
+      background-attachment: fixed;
+      overflow-x: hidden;
+      position: relative;
+      cursor: none;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .smoke {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%) center/200% 200%;
+      animation: smokeFlow 60s linear infinite alternate;
+      z-index: 1;
+      pointer-events: none;
+    }
+    @keyframes smokeFlow {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 100%; }
+    }
+    .tech-grid {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridShift 40s linear infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    @keyframes gridShift {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 200px 200px, 200px 200px; }
+    }
+    .sparks {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .spark {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #00ffe1;
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 3;
+      flex-direction: column;
+    }
+    .animated-name {
+      color: #fff;
+      font-size: 4rem;
+      font-family: 'Orbitron', sans-serif;
+      animation: glitch 2s infinite;
+      position: relative;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #0ff, -2px 0 #f0f; }
+      20% { text-shadow: -2px -2px #f0f, 2px 2px #0ff; }
+      40% { text-shadow: 2px 2px #0ff, -2px -2px #f0f; }
+      60% { text-shadow: -2px 2px #0ff, 2px -2px #f0f; }
+      80% { text-shadow: 2px -2px #f0f, -2px 2px #0ff; }
+      100% { text-shadow: -2px 0 #0ff, 2px 0 #f0f; }
+    }
+    .glow-blue {
+      color: #00ffe1;
+      text-shadow: 0 0 4px #00ffe1, 0 0 8px #00ffe1, 0 0 12px #00ffe1;
+    }
+    .marquee {
+      display: inline-block;
+      padding-left: 100%;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+    }
+    nav a {
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 6px #ff00ff;
+    }
+    .neon-button {
+      border: 2px solid #0ff;
+      padding: 0.5rem 1.5rem;
+      color: #0ff;
+      font-family: 'Orbitron', sans-serif;
+      background: transparent;
+      text-transform: uppercase;
+      margin-top: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .neon-button:hover {
+      background: #0ff;
+      color: #000;
+      box-shadow: 0 0 8px #0ff, 0 0 16px #0ff, 0 0 24px #0ff;
+    }
+    .fade-out {
+      animation: fadeOut 0.6s forwards;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: scale(1.05); }
+    }
+
+    /* КАСТОМНЫЙ КУРСОР С ШЛЕЙФОМ */
+    .cursor {
+      width: 10px;
+      height: 10px;
+      background: #00ffe1;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1, 0 0 30px #00ffe1;
+    }
+    .trail {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: #00ffe1;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.6;
+      transform: translate(-50%, -50%);
+      z-index: 99;
+      animation: trailFade 0.5s forwards;
+    }
+    @keyframes trailFade {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2);
+      }
+    }
+
+    #portal {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: opacity 1s ease;
+    }
+    #portal.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #portal h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: #00ffe1;
+      animation: glitch 2s infinite;
+    }
+    #sakura {
+  z-index: 1;
+  opacity: 1;
+}
+ /* ВИХРЬ */
+ .vortex {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,255,225,0.05) 0%, rgba(0,0,0,0) 70%);
+    animation: spin 120s linear infinite;
+    pointer-events: none;
+    z-index: 2; /* Между tech-grid и sparks */
+    mix-blend-mode: screen;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  </style>
+</head>
+
+<body>
+
+<!-- ПОРТАЛ -->
+<div id="portal">
+  <h1>Connecting to the world...</h1>
+</div>
+<div id="transition-screen" style="
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transition: opacity 0.8s ease;
+">
+  <div class="vortex" style="z-index:2001;"></div>
+  <h1 style="font-family: 'Orbitron', sans-serif; color: #00ffe1; margin-top: 20px;">Loading...</h1>
+</div>
+
+<div class="smoke"></div>
+<div class="tech-grid"></div>
+<div class="sparks" id="sparkContainer"></div>
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a id="to-projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <h1 id="animated-name" class="animated-name glow-blue">クリスティーナ</h1>
+  <p class="text-gray-300 italic mt-4">Game designer. Storycrafter. Tokyo-minded.</p>
+  <button class="neon-button" id="explore-btn">Explore</button>
+</section>
+
+<div class="w-full overflow-hidden whitespace-nowrap relative z-3 border-t border-b border-cyan-400 bg-black bg-opacity-40 py-2 mt-10">
+  <div class="marquee glow-blue font-orbitron text-sm tracking-widest">
+    ✦ Welcome to Christina's world ✦ Game Design ✦ Tokyo Vibes ✦ Indie Spirit ✦ Creativity Unleashed ✦
+  </div>
+</div>
+
+<section id="about" class="py-20 px-6 max-w-4xl mx-auto z-3 relative">
+  <h2 class="text-3xl mb-4 border-b border-gray-600 pb-2 relative z-10">About Me</h2>
+  <p class="text-lg leading-relaxed relative z-10">
+    Эта страница создана в развлекательных целях. Я начинающий геймдизайнер и художник. С помощью своего проекта я хочу показать, что получение реальных проектов не так важно, как воплощение собственных идей.
+  </p>
+</section>
+
+<section id="sakura-section" class="relative w-full h-screen overflow-hidden">
+  <canvas id="sakura" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+</section>
+
+
+
+<footer id="contact" class="py-16 px-6 text-center text-gray-400 relative z-3">
+  <p class="text-xl mb-2">Let’s build a world together.</p>
+  <p class="text-sm">Telegram / Discord / Email</p>
+  <p class="mt-4 text-sm">ありがとう</p>
+</footer>
+
+<!-- МУЗЫКА -->
+<audio id="bg-music" loop autoplay>
+  <source src="https://file.garden/aAnc8CRCrCCMWit1/tokyo-glow-285247.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Регулятор громкости -->
+<div style="position:fixed; bottom:20px; right:20px; z-index:10;">
+  <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+</div>
+
+<script>
+  // ИМЯ
+  const nameEl = document.getElementById("animated-name");
+  const names = ["クリスティーナ", "Christina"];
+  let i = 0;
+  setInterval(() => {
+    nameEl.textContent = names[i % names.length];
+    i++;
+  }, 4000);
+
+  // СПАРКЛЫ
+  const sparkContainer = document.getElementById("sparkContainer");
+  const totalSparks = 100;
+  const sparks = [];
+  for (let i = 0; i < totalSparks; i++) {
+    const spark = document.createElement("div");
+    spark.classList.add("spark");
+    spark.style.left = `${Math.random() * 100}vw`;
+    spark.style.top = `${Math.random() * 100}vh`;
+    spark.speed = 0.2 + Math.random() * 0.5;
+    sparkContainer.appendChild(spark);
+    sparks.push(spark);
+  }
+
+  function animateSparks() {
+    sparks.forEach(spark => {
+      let top = parseFloat(spark.style.top);
+      top -= spark.speed;
+      if (top < -5) {
+        top = 105;
+        spark.style.left = `${Math.random() * 100}vw`;
+      }
+      spark.style.top = `${top}vh`;
+    });
+    requestAnimationFrame(animateSparks);
+  }
+  animateSparks();
+
+  // Курсор и след
+  const cursor = document.getElementById("cursor");
+
+  document.addEventListener("mousemove", (e) => {
+    cursor.style.left = `${e.clientX}px`;
+    cursor.style.top = `${e.clientY}px`;
+
+    const trail = document.createElement("div");
+    trail.className = "trail";
+    trail.style.left = `${e.clientX}px`;
+    trail.style.top = `${e.clientY}px`;
+    document.body.appendChild(trail);
+    setTimeout(() => trail.remove(), 500);
+
+    sparks.forEach(spark => {
+      const dx = e.clientX - spark.offsetLeft;
+      const dy = e.clientY - spark.offsetTop;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 100) {
+        spark.style.transform = `translate(${dx / 5}px, ${dy / 5}px)`;
+      } else {
+        spark.style.transform = "";
+      }
+    });
+  });
+
+  // Переход на проекты
+  document.getElementById("to-projects").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+      window.location.href = "projects.html";
+    }, 600);
+  });
+
+// Переход при нажатии на Explore
+document.getElementById("explore-btn").addEventListener("click", () => {
+  startTransition("gallery.html");
+});
+
+// Функция плавного перехода
+function startTransition(targetUrl) {
+  const transitionScreen = document.getElementById('transition-screen');
+  transitionScreen.style.pointerEvents = 'auto';
+  transitionScreen.style.opacity = 1;
+  setTimeout(() => {
+    window.location.href = targetUrl;
+  }, 1200); // Ждём 1.2 секунды, пока проиграется вихрь
+}
+
+  // Портал
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById("portal").classList.add("hidden");
+    }, 1500);
+  });
+
+  // Регулятор громкости
+  const music = document.getElementById("bg-music");
+  document.getElementById("volume").addEventListener("input", (e) => {
+    music.volume = e.target.value;
+  });
+  // Сакура-анимация
+  const canvas = document.getElementById('sakura');
+const ctx = canvas.getContext('2d');
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+canvas.width = w;
+canvas.height = h;
+
+window.addEventListener('resize', () => {
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = w;
+  canvas.height = h;
+});
+
+const pinkShades = ['#ffb7c5', '#ffc1cc', '#ffccd5', '#fbb6b6', '#f9a8d4'];
+
+class Leaf {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = 2 + Math.random() * 2;
+    this.speedY = 0.5 + Math.random() * 1;
+    this.speedX = Math.random() * 0.5 - 0.25;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = Math.random() * 0.02 - 0.01;
+    this.opacity = 1;
+  }
+
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    this.rotation += this.rotationSpeed;
+    this.opacity -= 0.005;
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = 'pink';
+    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+}
+
+class Flower {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.color = pinkShades[Math.floor(Math.random() * pinkShades.length)];
+    this.baseSize = 5 + Math.random() * 3;
+    this.size = this.baseSize;
+    this.maxSize = this.baseSize + 2;
+    this.growthSpeed = 0.02 + Math.random() * 0.02;
+    this.angle = Math.random() * Math.PI * 2;
+    this.rotationSpeed = 0.01 + Math.random() * 0.01;
+    this.leaves = [];
+  }
+
+  update() {
+    this.size += this.growthSpeed;
+    if (this.size > this.maxSize || this.size < this.baseSize) {
+      this.growthSpeed *= -1;
+    }
+    this.angle += this.rotationSpeed;
+
+    if (Math.random() < 0.003) {
+      this.leaves.push(new Leaf(this.x, this.y));
+    }
+
+    this.leaves.forEach(l => l.update());
+    this.leaves = this.leaves.filter(l => l.opacity > 0);
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.fillStyle = this.color;
+
+    ctx.fillRect(-this.size, 0, this.size, this.size);
+    ctx.fillRect(0, -this.size, this.size, this.size);
+    ctx.fillRect(0, 0, this.size, this.size);
+    ctx.fillRect(-this.size, -this.size, this.size, this.size);
+    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+
+    ctx.restore();
+
+    this.leaves.forEach(l => l.draw(ctx));
+  }
+}
+
+class Branch {
+  constructor(x, y, angle, speed, thickness, depth) {
+    this.startX = x;
+    this.startY = y;
+    this.angle = angle;
+    this.speed = speed;
+    this.thickness = thickness;
+    this.depth = depth;
+    this.length = 0;
+    this.maxLength = 100 + Math.random() * 150;
+    this.children = [];
+    this.flowers = [];
+    this.finished = false;
+  }
+
+  update() {
+    if (this.length < this.maxLength) {
+      this.length += this.speed;
+    } else {
+      if (!this.finished) {
+        if (this.depth < 4) {
+          const n = Math.random() > 0.5 ? 2 : 1;
+          for (let i = 0; i < n; i++) {
+            const newAngle = this.angle + (Math.random() * 0.6 - 0.3);
+            const newSpeed = this.speed * (0.7 + Math.random() * 0.3);
+            const newThickness = this.thickness * 0.7;
+            const child = new Branch(
+              this.startX + Math.cos(this.angle) * this.maxLength,
+              this.startY + Math.sin(this.angle) * this.maxLength,
+              newAngle,
+              newSpeed,
+              newThickness,
+              this.depth + 1
+            );
+            this.children.push(child);
+          }
+        }
+        this.finished = true;
+      }
+    }
+
+    if (Math.random() < 0.15 && this.depth > 1 && this.length < this.maxLength) {
+      const fx = this.startX + Math.cos(this.angle) * this.length;
+      const fy = this.startY + Math.sin(this.angle) * this.length;
+      this.flowers.push(new Flower(fx, fy));
+    }
+
+    this.children.forEach(c => c.update());
+    this.flowers.forEach(f => f.update());
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.strokeStyle = '#5c4033';
+    ctx.lineWidth = this.thickness;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(this.startX, this.startY);
+    ctx.lineTo(
+      this.startX + Math.cos(this.angle) * this.length,
+      this.startY + Math.sin(this.angle) * this.length
+    );
+    ctx.stroke();
+    ctx.restore();
+
+    this.flowers.forEach(f => f.draw(ctx));
+    this.children.forEach(c => c.draw(ctx));
+  }
+}
+
+const branches = [];
+branches.push(new Branch(50, h / 2, 0, 2, 6, 0));
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+
+  branches.forEach(b => {
+    b.update();
+    b.draw(ctx);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Починка автоскролла
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 10); // малюсенькая задержка чтобы перебить браузерный автофокус
+});
+
+</script>
+<!-- Вставь этот canvas в твой index.html, например перед закрывающимся тегом body -->
+<canvas id="vortexCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000;"></canvas>
+
+<script>
+const canvas = document.getElementById('vortexCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let vortexActive = false;
+let frame = 0;
+
+// Настройка размеров
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Создание частиц
+function createParticles() {
+  for (let i = 0; i < 300; i++) {
+    particles.push({
+      angle: Math.random() * 2 * Math.PI,
+      radius: Math.random() * Math.min(canvas.width, canvas.height) / 2,
+      speed: 2 + Math.random() * 2,
+      size: 1 + Math.random() * 3,
+      alpha: 1
+    });
+  }
+}
+
+// Отрисовка вихря
+function drawVortex() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.save();
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+
+  particles.forEach(p => {
+    p.angle += 0.1;
+    p.radius *= 0.96;
+    p.alpha *= 0.96;
+
+    const x = p.radius * Math.cos(p.angle);
+    const y = p.radius * Math.sin(p.angle);
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(180, 100, 255, ${p.alpha})`; // сиреневый
+    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+// Анимация
+function animate() {
+  if (vortexActive) {
+    frame++;
+    drawVortex();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Запуск вихря
+function startVortex() {
+  vortexActive = true;
+  createParticles();
+  
+  // Дополнительно "втягиваем" весь сайт
+  document.body.style.transition = 'transform 2s ease, opacity 2s ease';
+  document.body.style.transform = 'scale(0.5) rotate(20deg)';
+  document.body.style.opacity = '0';
+  
+  setTimeout(() => {
+    window.location.href = "/gallery"; // <-- Ссылка куда переходим
+  }, 2000);
+}
+
+// Слушатель на кнопку "Explore"
+document.getElementById('Explore').addEventListener('click', (e) => {
+  e.preventDefault();
+  startVortex();
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
